@@ -39,15 +39,6 @@ Designed for accessibility, KaarigarAI works across languages (English, Hindi, T
 ### Social Media Captions & Smart Pricing
 ![Captions and Pricing](frontend/public/screenshots/captions_pricing.png)
 
-### Solution Overview
-![KaarigarAI Features](frontend/public/screenshots/solution.png)
-
-### The Problem We Solve
-![How KaarigarAI Works](frontend/public/screenshots/problem.png)
-
-### Demo Preview
-![KaarigarAI Demo](frontend/public/screenshots/demo.png)
-
 ---
 
 ## 🛠 Tech Stack
