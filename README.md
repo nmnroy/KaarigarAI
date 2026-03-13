@@ -2,17 +2,25 @@
 
 **KaarigarAI** is an AI-powered marketplace assistant built to empower Indian artisans. It breaks down digital barriers by converting simple product photos into robust, SEO-ready marketplace listings, heritage stories, social media captions, and data-driven pricing strategies.
 
+![KaarigarAI Demo](frontend/public/screenshots/demo.png)
+
 Designed for accessibility, KaarigarAI works across languages (English & Hindi) and integrates directly via WhatsApp, ensuring artisans in the most rural communities can reach global markets without needing complex software skills.
 
 ---
 
 ## ✨ Key Features
+
+![KaarigarAI Features](frontend/public/screenshots/features.png)
+
 - **Heritage Story Generator**: Automatically crafts authentic, culturally accurate background stories for the artisan's specific craft (e.g., Kantha, Madhubani).
 - **Marketplace Listing Creator**: Generates SEO-optimized titles, product descriptions, and keywords ready for Etsy, Amazon, or Shopify.
 - **Smart Appraisals (Pricing)**: Calculates a data-driven low, optimal, and premium price range in INR based on the uploaded product image.
 - **Social Media Assistant**: Creates multiple ready-to-use Instagram captions with relevant hashtags.
 - **WhatsApp Webhook**: Artisans can text a photo and a brief voice note to our Twilio bot to receive translated listings instantly.
 - **Pitch Deck Mode**: Contains a built-in React component for presenting the project seamlessly at hackathons (`/pitch`).
+
+![How KaarigarAI Works](frontend/public/screenshots/steps.png)
+
 
 ---
 
