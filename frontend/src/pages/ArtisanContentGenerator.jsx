@@ -1,7 +1,14 @@
 import { useState, useRef } from 'react';
-import { Upload as UploadIcon, Image as ImageIcon, Loader2, Copy, Check, MapPin, User, Palette, AlignLeft, Tags, DollarSign, Instagram, BookOpen, Sparkles } from 'lucide-react';
+import { Upload as UploadIcon, Image as ImageIcon, Loader2, Copy, Check, MapPin, User, Palette, AlignLeft, Tags, DollarSign, Instagram, BookOpen, Sparkles, Globe, ChevronDown } from 'lucide-react';
 
 const REGIONS = ['Rajasthan', 'Bengal', 'Bihar', 'UP', 'Tamil Nadu', 'Kashmir', 'Other'];
+
+const LANGUAGES = [
+  { code: 'en', label: 'English', flag: '🇬🇧' },
+  { code: 'hi', label: 'Hindi', flag: '🇮🇳' },
+  { code: 'ta', label: 'Tamil', flag: '🏳️' },
+  { code: 'bn', label: 'Bengali', flag: '🏴' }
+];
 
 // Pre-filled demo data for a Madhubani Painting from Bihar
 const DEMO_DATA = {
@@ -52,6 +59,12 @@ export default function ArtisanContentGenerator() {
   const [generatedData, setGeneratedData] = useState(null);
   const [copiedSection, setCopiedSection] = useState(null);
   const [isDemoMode, setIsDemoMode] = useState(false);
+
+  // Language toggle state
+  const [cardLangs, setCardLangs] = useState({ story: 'en', listing: 'en', captions: 'en', pricing: 'en' });
+  const [translating, setTranslating] = useState({ story: false, listing: false, captions: false, pricing: false });
+  const [originalData, setOriginalData] = useState(null); // preserve English originals
+  const [openLangMenu, setOpenLangMenu] = useState(null); // which card's menu is open
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -157,6 +170,8 @@ export default function ArtisanContentGenerator() {
       const cleanedText = outputText.replace(/```json/g, '').replace(/```/g, '').trim();
       const jsonResult = JSON.parse(cleanedText);
       setGeneratedData(jsonResult);
+      setOriginalData(JSON.parse(JSON.stringify(jsonResult))); // deep clone for translation fallback
+      setCardLangs({ story: 'en', listing: 'en', captions: 'en', pricing: 'en' }); // reset languages
 
       // Scroll to results smoothly
       setTimeout(() => {
@@ -174,6 +189,126 @@ export default function ArtisanContentGenerator() {
     } finally {
       setIsGenerating(false);
     }
+  };
+
+  // --- Language Translation via Gemini ---
+  const translateCard = async (cardKey, langCode) => {
+    if (langCode === 'en') {
+      // Revert to original English data
+      if (originalData) {
+        if (cardKey === 'story') setGeneratedData(prev => ({ ...prev, heritageStory: originalData.heritageStory }));
+        if (cardKey === 'listing') setGeneratedData(prev => ({ ...prev, productListing: originalData.productListing }));
+        if (cardKey === 'captions') setGeneratedData(prev => ({ ...prev, instagramCaptions: originalData.instagramCaptions }));
+        if (cardKey === 'pricing') setGeneratedData(prev => ({ ...prev, pricing: originalData.pricing }));
+      }
+      setCardLangs(prev => ({ ...prev, [cardKey]: 'en' }));
+      return;
+    }
+
+    const GEMINI_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+    if (!GEMINI_KEY) { alert('API Key missing'); return; }
+
+    const langName = LANGUAGES.find(l => l.code === langCode)?.label || langCode;
+    setTranslating(prev => ({ ...prev, [cardKey]: true }));
+    setOpenLangMenu(null);
+
+    try {
+      let contentToTranslate = '';
+      let parseInstructions = '';
+
+      if (cardKey === 'story') {
+        contentToTranslate = originalData?.heritageStory || generatedData.heritageStory;
+        parseInstructions = 'Return ONLY the translated text as a plain string. No JSON, no markdown.';
+      } else if (cardKey === 'listing') {
+        const src = originalData?.productListing || generatedData.productListing;
+        contentToTranslate = JSON.stringify(src);
+        parseInstructions = 'Return a valid JSON object with keys: title, description, tags (array of strings). No markdown.';
+      } else if (cardKey === 'captions') {
+        const src = originalData?.instagramCaptions || generatedData.instagramCaptions;
+        contentToTranslate = JSON.stringify(src);
+        parseInstructions = 'Return a valid JSON array of 3 translated caption strings. No markdown.';
+      } else if (cardKey === 'pricing') {
+        const src = originalData?.pricing || generatedData.pricing;
+        contentToTranslate = JSON.stringify(src);
+        parseInstructions = 'Return a valid JSON object with keys: low, mid, high, justification. Keep prices in INR numerals. No markdown.';
+      }
+
+      const prompt = `Translate the following content to ${langName}. Keep hashtags, emojis, and INR prices as-is. ${parseInstructions}\n\nContent:\n${contentToTranslate}`;
+
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${GEMINI_KEY}`;
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+      });
+
+      const result = await response.json();
+      const outputText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!outputText) throw new Error('Empty response');
+
+      const cleaned = outputText.replace(/```json/g, '').replace(/```/g, '').trim();
+
+      if (cardKey === 'story') {
+        setGeneratedData(prev => ({ ...prev, heritageStory: cleaned }));
+      } else if (cardKey === 'listing') {
+        setGeneratedData(prev => ({ ...prev, productListing: JSON.parse(cleaned) }));
+      } else if (cardKey === 'captions') {
+        setGeneratedData(prev => ({ ...prev, instagramCaptions: JSON.parse(cleaned) }));
+      } else if (cardKey === 'pricing') {
+        setGeneratedData(prev => ({ ...prev, pricing: JSON.parse(cleaned) }));
+      }
+
+      setCardLangs(prev => ({ ...prev, [cardKey]: langCode }));
+    } catch (err) {
+      console.error('Translation error:', err);
+      alert('Translation failed. Check the console.');
+    } finally {
+      setTranslating(prev => ({ ...prev, [cardKey]: false }));
+    }
+  };
+
+  // Language toggle dropdown component
+  const LanguageToggle = ({ cardKey }) => {
+    const currentLang = LANGUAGES.find(l => l.code === cardLangs[cardKey]) || LANGUAGES[0];
+    const isOpen = openLangMenu === cardKey;
+    const isLoading = translating[cardKey];
+
+    return (
+      <div className="relative">
+        <button
+          type="button"
+          onClick={() => setOpenLangMenu(isOpen ? null : cardKey)}
+          disabled={isLoading}
+          className={`flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border transition-all ${
+            isLoading ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-wait'
+            : 'bg-white hover:bg-gray-50 text-gray-600 hover:text-gray-800 border-gray-200 hover:border-gray-300 shadow-sm'
+          }`}
+        >
+          {isLoading ? (
+            <><Loader2 size={12} className="animate-spin" /> Translating...</>
+          ) : (
+            <><Globe size={12} /> {currentLang.flag} {currentLang.label} <ChevronDown size={12} /></>
+          )}
+        </button>
+
+        {isOpen && (
+          <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg z-50 min-w-[140px] overflow-hidden">
+            {LANGUAGES.map(lang => (
+              <button
+                key={lang.code}
+                type="button"
+                onClick={() => translateCard(cardKey, lang.code)}
+                className={`w-full text-left px-4 py-2.5 text-sm flex items-center gap-2 hover:bg-saffron/10 transition-colors ${
+                  cardLangs[cardKey] === lang.code ? 'bg-saffron/5 font-semibold text-terracotta' : 'text-gray-700'
+                }`}
+              >
+                <span>{lang.flag}</span> {lang.label}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    );
   };
 
   const renderCopyBtn = (text, sectionId) => (
@@ -200,6 +335,8 @@ export default function ArtisanContentGenerator() {
             setPreview(DEMO_DATA.previewUrl);
             setFile(null); // No real file in demo mode
             setGeneratedData(DEMO_DATA.results);
+            setOriginalData(JSON.parse(JSON.stringify(DEMO_DATA.results)));
+            setCardLangs({ story: 'en', listing: 'en', captions: 'en', pricing: 'en' });
             setIsDemoMode(true);
             setTimeout(() => {
               window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
@@ -341,7 +478,8 @@ export default function ArtisanContentGenerator() {
                     <BookOpen size={18} className="text-orange-500" /> 
                     Heritage Story
                  </h4>
-                 {renderCopyBtn(generatedData.heritageStory, 'story')}
+                  {renderCopyBtn(generatedData.heritageStory, 'story')}
+                  <LanguageToggle cardKey="story" />
               </div>
               <div className="p-6 relative flex-grow">
                  <span className="text-6xl text-orange-200/50 absolute top-4 left-4 leading-none font-serif">"</span>
@@ -362,6 +500,7 @@ export default function ArtisanContentGenerator() {
                    `${generatedData.productListing.title}\n\n${generatedData.productListing.description}\n\nTags: ${generatedData.productListing.tags.join(', ')}`, 
                    'listing'
                  )}
+                  <LanguageToggle cardKey="listing" />
               </div>
               <div className="p-6 flex flex-col flex-grow">
                  <h5 className="font-bold text-lg text-gray-900 mb-3">{generatedData.productListing.title}</h5>
@@ -383,6 +522,7 @@ export default function ArtisanContentGenerator() {
                     <Instagram size={18} className="text-pink-500" /> 
                     Social Media Captions
                  </h4>
+                 <LanguageToggle cardKey="captions" />
               </div>
               <div className="p-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -405,6 +545,7 @@ export default function ArtisanContentGenerator() {
                     <DollarSign size={18} className="text-emerald-600" /> 
                     Suggested Pricing Strategy
                  </h4>
+                 <LanguageToggle cardKey="pricing" />
               </div>
               <div className="p-6 grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
                  <div className="md:col-span-1 space-y-3">
