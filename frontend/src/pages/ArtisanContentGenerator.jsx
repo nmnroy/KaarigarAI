@@ -54,7 +54,9 @@ export default function ArtisanContentGenerator() {
     submitData.append('region', formData.region);
 
     try {
-      const response = await fetch('/api/generate', {
+      // Use the production URL provided by the user
+      const BASE_URL = 'https://kaarigarai.onrender.com';
+      const response = await fetch(`${BASE_URL}/api/generate`, {
         method: 'POST',
         body: submitData
       });
