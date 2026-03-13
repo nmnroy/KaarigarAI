@@ -18,26 +18,61 @@ export default function Upload() {
     }
   };
 
+  // Helper: read a File as base64 string
+  const fileToBase64 = (file) => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!file) return alert('Please upload a product photo.');
     
     setIsUploading(true);
-    
-    const formData = new FormData();
-    formData.append('image', file);
-    formData.append('description', description);
 
     try {
-      const response = await fetch('/api/generate', {
+      const GEMINI_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+      if (!GEMINI_KEY) throw new Error('VITE_GEMINI_API_KEY not set');
+
+      const base64Image = await fileToBase64(file);
+
+      const prompt = `
+        You are a cultural marketing expert specializing in Indian handicrafts.
+        Description from artisan: "${description || 'No description provided.'}"
+
+        Analyze the attached image and generate content. Return strictly valid JSON:
+        {
+          "heritageStory": "A 150-word heritage story",
+          "productListing": { "title": "SEO title", "description": "200-word description", "tags": ["tag1","tag2","tag3","tag4","tag5","tag6","tag7","tag8","tag9","tag10"] },
+          "instagramCaptions": ["caption1","caption2","caption3"],
+          "pricing": { "low": "price in INR", "mid": "price in INR", "high": "price in INR", "justification": "reason" }
+        }
+        No markdown formatting. Just the raw JSON object.
+      `;
+
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${GEMINI_KEY}`;
+      const response = await fetch(apiUrl, {
         method: 'POST',
-        body: formData
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [
+            { text: prompt },
+            { inline_data: { mime_type: file.type, data: base64Image } }
+          ]}]
+        })
       });
-      
-      if (!response.ok) throw new Error('API Error');
-      
-      const data = await response.json();
-      
+
+      if (!response.ok) throw new Error('Gemini API error');
+
+      const result = await response.json();
+      const outputText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!outputText) throw new Error('No response from Gemini');
+
+      const cleaned = outputText.replace(/```json/g, '').replace(/```/g, '').trim();
+      const data = JSON.parse(cleaned);
+
       const artisanData = JSON.parse(localStorage.getItem('artisan')) || {};
       const productPayload = {
         artisanId: artisanData.id || 'anonymous',
@@ -46,17 +81,14 @@ export default function Upload() {
         createdAt: new Date().toISOString()
       };
 
-      // Mock save to "database"
       const existingProducts = JSON.parse(localStorage.getItem('products') || '[]');
       existingProducts.push(productPayload);
       localStorage.setItem('products', JSON.stringify(existingProducts));
-
-      // Save generating data to localStorage to view in dashboard
       localStorage.setItem('generatedContent', JSON.stringify(data));
       navigate('/dashboard');
     } catch (err) {
-      console.error(err);
-      alert('Failed to process image. Make sure the backend server is running and API key is set.');
+      console.error('Upload error:', err);
+      alert('Failed to generate content. Please check that VITE_GEMINI_API_KEY is set in your environment.');
     } finally {
       setIsUploading(false);
     }
@@ -69,10 +101,10 @@ export default function Upload() {
         <p className="text-gray-600">Let our AI craft the perfect story and details for your creation.</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="card p-8 bg-white border border-ivory-dark">
+      <form onSubmit={handleSubmit} className="card p-8 bg-white border border-cream-dark">
         {/* Image Upload Area */}
         <div 
-          className="border-2 border-dashed border-gray-300 rounded-xl p-8 flex flex-col items-center justify-center bg-gray-50 hover:bg-ivory transition-colors cursor-pointer min-h-[250px] mb-8 relative overflow-hidden"
+          className="border-2 border-dashed border-gray-300 rounded-xl p-8 flex flex-col items-center justify-center bg-gray-50 hover:bg-cream transition-colors cursor-pointer min-h-[250px] mb-8 relative overflow-hidden"
           onClick={() => fileInputRef.current.click()}
         >
           <input 
