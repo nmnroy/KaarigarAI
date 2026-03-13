@@ -10,7 +10,7 @@ Designed for accessibility, KaarigarAI works across languages (English & Hindi) 
 
 ## ✨ Key Features
 
-![KaarigarAI Features](frontend/public/screenshots/features.png)
+![KaarigarAI Features](frontend/public/screenshots/solution.png)
 
 - **Heritage Story Generator**: Automatically crafts authentic, culturally accurate background stories for the artisan's specific craft (e.g., Kantha, Madhubani).
 - **Marketplace Listing Creator**: Generates SEO-optimized titles, product descriptions, and keywords ready for Etsy, Amazon, or Shopify.
@@ -19,7 +19,7 @@ Designed for accessibility, KaarigarAI works across languages (English & Hindi) 
 - **WhatsApp Webhook**: Artisans can text a photo and a brief voice note to our Twilio bot to receive translated listings instantly.
 - **Pitch Deck Mode**: Contains a built-in React component for presenting the project seamlessly at hackathons (`/pitch`).
 
-![How KaarigarAI Works](frontend/public/screenshots/steps.png)
+![How KaarigarAI Works](frontend/public/screenshots/problem.png)
 
 
 ---
