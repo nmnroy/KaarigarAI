@@ -21,7 +21,16 @@ Designed for accessibility, KaarigarAI works across languages (English, Hindi, T
 
 ## 🖼 Screenshots
 
-### Upload & Generate
+### Hero & Problem Statement
+![Hero and Problem](frontend/public/screenshots/hero_problem.png)
+
+### Features & How It Works
+![Features and Steps](frontend/public/screenshots/features_steps.png)
+
+### Try KaarigarAI — Generator Form
+![Try KaarigarAI](frontend/public/screenshots/try_kaarigarai.png)
+
+### Upload & Generate (Demo Mode)
 ![Generator Form](frontend/public/screenshots/generator_form.png)
 
 ### AI Generated Kit — Heritage Story & Marketplace Listing
@@ -29,6 +38,15 @@ Designed for accessibility, KaarigarAI works across languages (English, Hindi, T
 
 ### Social Media Captions & Smart Pricing
 ![Captions and Pricing](frontend/public/screenshots/captions_pricing.png)
+
+### Solution Overview
+![KaarigarAI Features](frontend/public/screenshots/solution.png)
+
+### The Problem We Solve
+![How KaarigarAI Works](frontend/public/screenshots/problem.png)
+
+### Demo Preview
+![KaarigarAI Demo](frontend/public/screenshots/demo.png)
 
 ---
 
