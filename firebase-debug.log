@@ -1,0 +1,81 @@
+[debug] [2026-03-13T20:30:47.038Z] ----------------------------------------------------------------------
+[debug] [2026-03-13T20:30:47.043Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Lenovo\AppData\Local\npm-cache\_npx\7750544ccf494d8b\node_modules\firebase-tools\lib\bin\firebase.js login:ci --no-localhost
+[debug] [2026-03-13T20:30:47.043Z] CLI Version:   15.10.0
+[debug] [2026-03-13T20:30:47.043Z] Platform:      win32
+[debug] [2026-03-13T20:30:47.044Z] Node Version:  v22.19.0
+[debug] [2026-03-13T20:30:47.044Z] Time:          Sat Mar 14 2026 02:00:47 GMT+0530 (India Standard Time)
+[debug] [2026-03-13T20:30:47.044Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-03-13T20:30:47.046Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[warn] !  Authenticating with a `login:ci` token is deprecated and will be removed in a future major version of `firebase-tools`. Instead, use a service account key with `GOOGLE_APPLICATION_CREDENTIALS`: https://cloud.google.com/docs/authentication/getting-started 
+[debug] [2026-03-13T20:30:47.102Z] >>> [apiv2][query] POST https://auth.firebase.tools/attest [none]
+[debug] [2026-03-13T20:30:47.102Z] >>> [apiv2][body] POST https://auth.firebase.tools/attest {"session_id":"6d95519c-395a-4e76-917c-c109dfd05f7a"}
+[debug] [2026-03-13T20:30:47.904Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2026-03-13T20:30:47.904Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
+[debug] [2026-03-13T20:30:48.031Z] <<< [apiv2][status] POST https://auth.firebase.tools/attest 200
+[debug] [2026-03-13T20:30:48.031Z] <<< [apiv2][body] POST https://auth.firebase.tools/attest {"token":"0o8Zu-v7usYszleL8PlxlezbK2-smEhULs49llqKC20"}
+[info] 
+[info] To sign in to the Firebase CLI:
+[info] 
+[info] 1. Take note of your session ID:
+[info] 
+[info]    6D955
+[info] 
+[info] 2. Visit the URL below on any device and follow the instructions to get your code:
+[info] 
+[info]    https://auth.firebase.tools/login?code_challenge=JobxrvEhHhlW8jnqqaB0JR1XdthS6K9DQjk7X0uG-L8&session=6d95519c-395a-4e76-917c-c109dfd05f7a&attest=0o8Zu-v7usYszleL8PlxlezbK2-smEhULs49llqKC20
+[info] 
+[info] 3. Paste or enter the authorization code below once you have it:
+[info] 
+[debug] [2026-03-13T20:32:04.078Z] ExitPromptError: User force closed the prompt with SIGINT
+    at Interface.sigint (C:\Users\Lenovo\AppData\Local\npm-cache\_npx\7750544ccf494d8b\node_modules\@inquirer\core\dist\commonjs\lib\create-prompt.js:101:37)
+    at Interface.emit (node:events:519:28)
+    at [_ttyWrite] [as _ttyWrite] (node:internal/readline/interface:1132:18)
+    at ReadStream.onkeypress (node:internal/readline/interface:271:20)
+    at ReadStream.emit (node:events:531:35)
+    at emitKeys (node:internal/readline/utils:370:14)
+    at emitKeys.next (<anonymous>)
+    at ReadStream.onData (node:internal/readline/emitKeypressEvents:64:36)
+    at ReadStream.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:561:12)
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2026-03-13T20:32:56.614Z] ----------------------------------------------------------------------
+[debug] [2026-03-13T20:32:56.618Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Lenovo\AppData\Local\npm-cache\_npx\7750544ccf494d8b\node_modules\firebase-tools\lib\bin\firebase.js login:ci --no-localhost
+[debug] [2026-03-13T20:32:56.618Z] CLI Version:   15.10.0
+[debug] [2026-03-13T20:32:56.618Z] Platform:      win32
+[debug] [2026-03-13T20:32:56.618Z] Node Version:  v22.19.0
+[debug] [2026-03-13T20:32:56.619Z] Time:          Sat Mar 14 2026 02:02:56 GMT+0530 (India Standard Time)
+[debug] [2026-03-13T20:32:56.619Z] ----------------------------------------------------------------------
+[debug] 
+[warn] !  Authenticating with a `login:ci` token is deprecated and will be removed in a future major version of `firebase-tools`. Instead, use a service account key with `GOOGLE_APPLICATION_CREDENTIALS`: https://cloud.google.com/docs/authentication/getting-started 
+[debug] [2026-03-13T20:32:56.630Z] >>> [apiv2][query] POST https://auth.firebase.tools/attest [none]
+[debug] [2026-03-13T20:32:56.630Z] >>> [apiv2][body] POST https://auth.firebase.tools/attest {"session_id":"dade5b05-afb4-4947-98d8-52fe2ba7e4bc"}
+[debug] [2026-03-13T20:32:57.441Z] <<< [apiv2][status] POST https://auth.firebase.tools/attest 200
+[debug] [2026-03-13T20:32:57.442Z] <<< [apiv2][body] POST https://auth.firebase.tools/attest {"token":"8lfV19RAE4PmZMinRH6n4ykkV2QXbSw417Nnqs8RHSk"}
+[info] 
+[info] To sign in to the Firebase CLI:
+[info] 
+[info] 1. Take note of your session ID:
+[info] 
+[info]    DADE5
+[info] 
+[info] 2. Visit the URL below on any device and follow the instructions to get your code:
+[info] 
+[info]    https://auth.firebase.tools/login?code_challenge=wQNNEoQcxW6Ve56pLSW3kz3plr9v_WD_DuMe7YK-qGg&session=dade5b05-afb4-4947-98d8-52fe2ba7e4bc&attest=8lfV19RAE4PmZMinRH6n4ykkV2QXbSw417Nnqs8RHSk
+[info] 
+[info] 3. Paste or enter the authorization code below once you have it:
+[info] 
+[debug] [2026-03-13T20:36:25.819Z] ExitPromptError: User force closed the prompt with SIGINT
+    at Interface.sigint (C:\Users\Lenovo\AppData\Local\npm-cache\_npx\7750544ccf494d8b\node_modules\@inquirer\core\dist\commonjs\lib\create-prompt.js:101:37)
+    at Interface.emit (node:events:519:28)
+    at [_ttyWrite] [as _ttyWrite] (node:internal/readline/interface:1132:18)
+    at ReadStream.onkeypress (node:internal/readline/interface:271:20)
+    at ReadStream.emit (node:events:531:35)
+    at emitKeys (node:internal/readline/utils:370:14)
+    at emitKeys.next (<anonymous>)
+    at ReadStream.onData (node:internal/readline/emitKeypressEvents:64:36)
+    at ReadStream.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:561:12)
+[error] 
+[error] Error: An unexpected error has occurred.

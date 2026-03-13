@@ -1,0 +1,101 @@
+[
+  {
+    "id": 1,
+    "type": "title",
+    "title": "KaarigarAI",
+    "subtitle": "AI Marketplace Assistant for Indian Artisans",
+    "content": "From Your Hands to the World"
+  },
+  {
+    "id": 2,
+    "type": "problem",
+    "title": "The Artisan's Struggle",
+    "content": "India has 7 Million artisans, yet less than 3% sell online.",
+    "bullets": [
+      "No Digital Skills: Cataloging and SEO take years to learn",
+      "Language Barriers: Global marketplaces operate in English",
+      "Pricing Confusion: Handmade crafts are severely underpriced without market data"
+    ]
+  },
+  {
+    "id": 3,
+    "type": "solution",
+    "title": "The Solution: KaarigarAI",
+    "content": "A multimodal AI agent that empowers artisans to sell globally using just a photo.",
+    "bullets": [
+      "Heritage Story Generator: Authentic craft backgrounds",
+      "Marketplace Copy: SEO-rich listings and tags",
+      "Smart Appraisals: Data-driven pricing suggestions",
+      "Multilingual: Input in Hindi, output in English"
+    ]
+  },
+  {
+    "id": 4,
+    "type": "tech",
+    "title": "The Tech Stack",
+    "content": "Built for scale, speed, and accessibility.",
+    "bullets": [
+      "Frontend: React + Tailwind CSS + Vite",
+      "Backend: Node.js Express Server",
+      "Brain: Google Gemini 1.5 Pro Vision API",
+      "Language: Google Cloud Translation API",
+      "Accessibility: Twilio WhatsApp Webhook"
+    ]
+  },
+  {
+    "id": 5,
+    "type": "architecture",
+    "title": "System Architecture",
+    "content": "How KaarigarAI processes an artisanal artifact."
+  },
+  {
+    "id": 6,
+    "type": "demo",
+    "title": "Live Demo Flow",
+    "content": "From snapped photo to global marketplace.",
+    "bullets": [
+      "1. Artisan uploads a photo of Madhubani art",
+      "2. Gemini Vision analyzes the craft style, colors, and subject",
+      "3. KaarigarAI generates an Etsy-ready listing in under 10 seconds"
+    ]
+  },
+  {
+    "id": 7,
+    "type": "market",
+    "title": "The Market Opportunity",
+    "content": "Unlocking rural India's export potential.",
+    "stats": [
+      { "label": "Indian Handicraft Export Market", "value": "$750M+" },
+      { "label": "Artisans in India", "value": "7,000,000" },
+      { "label": "Current Online Penetration", "value": "< 3%" }
+    ]
+  },
+  {
+    "id": 8,
+    "type": "google",
+    "title": "Why Google Cloud?",
+    "content": "Powering the next generation of rural empowerment.",
+    "bullets": [
+      "Gemini Multimodal API: Unmatched computer vision for analyzing complex ethnic crafts",
+      "Translation API: Bridging the vernacular divide flawlessly",
+      "Agentspace & Firebase: Fast, secure, and reliable serverless infrastructure"
+    ]
+  },
+  {
+    "id": 9,
+    "type": "team",
+    "title": "The Team",
+    "content": "Builders passionate about Bharat.",
+    "bullets": [
+      "Your Name Here - Full Stack AI Developer",
+      "Looking for passionate designers and marketers!"
+    ]
+  },
+  {
+    "id": 10,
+    "type": "cta",
+    "title": "Join the Movement",
+    "subtitle": "Help us preserve India's craft heritage with the power of AI.",
+    "content": "Scan to try the Live Demo or text our WhatsApp Bot."
+  }
+]
