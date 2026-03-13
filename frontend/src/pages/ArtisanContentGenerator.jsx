@@ -1,7 +1,38 @@
 import { useState, useRef } from 'react';
-import { Upload as UploadIcon, Image as ImageIcon, Loader2, Copy, Check, MapPin, User, Palette, AlignLeft, Tags, DollarSign, Instagram, BookOpen } from 'lucide-react';
+import { Upload as UploadIcon, Image as ImageIcon, Loader2, Copy, Check, MapPin, User, Palette, AlignLeft, Tags, DollarSign, Instagram, BookOpen, Sparkles } from 'lucide-react';
 
-const REGIONS = ['Rajasthan', 'Bengal', 'UP', 'Tamil Nadu', 'Kashmir', 'Other'];
+const REGIONS = ['Rajasthan', 'Bengal', 'Bihar', 'UP', 'Tamil Nadu', 'Kashmir', 'Other'];
+
+// Pre-filled demo data for a Madhubani Painting from Bihar
+const DEMO_DATA = {
+  form: {
+    craftName: 'Madhubani Painting - Tree of Life',
+    description: 'Traditional Madhubani painting made with natural dyes on handmade paper. Features the sacred Tree of Life motif with intricate line work and vibrant colors. Created using double-line border technique passed down through five generations.',
+    artisanName: 'Sita Devi',
+    region: 'Bihar'
+  },
+  // Sample preview image (a solid color placeholder since we can't bundle a real image)
+  previewUrl: 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"><rect width="400" height="400" fill="#FFF8F0"/><rect x="20" y="20" width="360" height="360" fill="none" stroke="#C45C26" stroke-width="4"/><rect x="30" y="30" width="340" height="340" fill="none" stroke="#FF9933" stroke-width="2"/><line x1="200" y1="350" x2="200" y2="120" stroke="#3B1F0A" stroke-width="6"/><circle cx="200" cy="100" r="60" fill="none" stroke="#C45C26" stroke-width="3"/><circle cx="200" cy="100" r="45" fill="none" stroke="#FF9933" stroke-width="2"/><path d="M140,180 Q170,140 200,160 Q230,140 260,180" fill="none" stroke="#2D8B2D" stroke-width="3"/><path d="M120,220 Q160,170 200,200 Q240,170 280,220" fill="none" stroke="#2D8B2D" stroke-width="3"/><path d="M100,260 Q150,200 200,240 Q250,200 300,260" fill="none" stroke="#2D8B2D" stroke-width="3"/><circle cx="160" cy="190" r="8" fill="#FF9933"/><circle cx="240" cy="190" r="8" fill="#C45C26"/><circle cx="150" cy="240" r="6" fill="#FF9933"/><circle cx="250" cy="240" r="6" fill="#C45C26"/><circle cx="200" cy="160" r="6" fill="#FF9933"/><path d="M170,320 Q185,290 200,310 Q215,290 230,320" fill="none" stroke="#3B1F0A" stroke-width="2"/><text x="200" y="385" text-anchor="middle" font-family="serif" font-size="14" fill="#C45C26">Madhubani - Tree of Life</text></svg>'),
+  results: {
+    heritageStory: "In the ancient village of Jitwarpur, Bihar, where the Ganges whispers stories of a thousand years, Sita Devi sits on her veranda with brushes made from twigs and colors drawn from the earth itself. Her Madhubani painting of the Tree of Life is not merely art — it is a prayer rendered in pigment. Each branch represents a generation of women who painted these walls during festivals, weddings, and harvests. The sacred tree, rooted in mythology and blooming with fertility symbols, connects heaven to earth. Using the ancient double-line technique passed down from her grandmother, Sita fills every inch with meaning — fish for prosperity, peacocks for love, and lotuses for purity. This is not decoration; it is the living memory of Mithila.",
+    productListing: {
+      title: "Authentic Handpainted Madhubani Tree of Life | Original Bihar Folk Art on Handmade Paper | Natural Dyes",
+      description: "Own a piece of living Indian heritage with this stunning original Madhubani painting depicting the sacred Tree of Life motif. Meticulously handpainted by master artisan Sita Devi from Bihar's renowned Mithila region, this artwork uses traditional natural dyes extracted from turmeric, indigo, and vermillion on authentic handmade Nepali paper. The intricate double-line border technique — a hallmark of the Bharni style — showcases five generations of artistic mastery. Each brushstroke carries cultural significance: the intertwining branches symbolize the connection between heaven and earth, while the floral motifs represent fertility and prosperity. Perfect as a statement wall piece, a meaningful gift, or a collector's treasure. Comes with a certificate of authenticity.",
+      tags: ["MadhubaniArt", "IndianFolkArt", "TreeOfLife", "BiharHandicraft", "MithilaPainting", "NaturalDyes", "HandmadePaper", "AuthenticCraft", "WallArt", "CulturalHeritage"]
+    },
+    instagramCaptions: [
+      "Every line tells a story older than memory itself 🎨 Madhubani magic from Bihar. #MadhubaniArt #IndianHeritage #HandmadeInIndia #FolkArt",
+      "When art becomes prayer 🙏 The Tree of Life, painted with earth and soul by Sita Devi. #MithilaArt #TreeOfLife #ArtisanMade #SupportArtisans",
+      "5 generations. One brushstroke at a time. This is Madhubani. 🌳✨ #MadhubaniPainting #BiharArt #CulturalTreasure #BuyHandmade"
+    ],
+    pricing: {
+      low: "₹1,200",
+      mid: "₹2,500",
+      high: "₹4,500",
+      justification: "Pricing reflects the use of authentic natural dyes and handmade paper, which cost significantly more than synthetic alternatives. The artist's five-generation lineage and the intricate double-line Bharni technique place this work in the mid-to-premium range for original Madhubani paintings in the domestic and export market."
+    }
+  }
+};
 
 export default function ArtisanContentGenerator() {
   const fileInputRef = useRef(null);
@@ -20,6 +51,7 @@ export default function ArtisanContentGenerator() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedData, setGeneratedData] = useState(null);
   const [copiedSection, setCopiedSection] = useState(null);
+  const [isDemoMode, setIsDemoMode] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -96,6 +128,22 @@ export default function ArtisanContentGenerator() {
       <div className="text-center mt-6 mb-10">
         <h2 className="text-4xl font-bold tracking-tight text-gray-900 mb-4 font-serif">Marketing Crafted as <span className="text-terracotta">Art</span></h2>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">Upload your masterpiece and let AI weave its heritage into beautiful stories that sell on global marketplaces.</p>
+        <button
+          type="button"
+          onClick={() => {
+            setFormData(DEMO_DATA.form);
+            setPreview(DEMO_DATA.previewUrl);
+            setFile(null); // No real file in demo mode
+            setGeneratedData(DEMO_DATA.results);
+            setIsDemoMode(true);
+            setTimeout(() => {
+              window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            }, 150);
+          }}
+          className="mt-6 inline-flex items-center gap-2 bg-saffron/10 hover:bg-saffron/20 text-saffron-dark font-semibold px-6 py-3 rounded-full border-2 border-saffron/30 hover:border-saffron transition-all hover:-translate-y-0.5 shadow-sm"
+        >
+          <Sparkles size={18} /> Try Demo — Madhubani Painting
+        </button>
       </div>
 
       {/* Main Form */}
