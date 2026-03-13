@@ -71,41 +71,106 @@ export default function ArtisanContentGenerator() {
     setTimeout(() => setCopiedSection(null), 2000);
   };
 
+  // Helper: read a File as base64 string
+  const fileToBase64 = (file) => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]); // strip data:...;base64, prefix
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!file) return alert('Please upload a product photo.');
+
+    const GEMINI_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+    if (!GEMINI_KEY) {
+      alert('Gemini API key not found. Add VITE_GEMINI_API_KEY to your .env file.');
+      return;
+    }
     
     setIsGenerating(true);
     setGeneratedData(null);
-    
-    const submitData = new FormData();
-    submitData.append('image', file);
-    submitData.append('craftName', formData.craftName);
-    submitData.append('description', formData.description);
-    submitData.append('artisanName', formData.artisanName);
-    submitData.append('region', formData.region);
+    setIsDemoMode(false);
 
     try {
-      // Use the production URL provided by the user
-      const BASE_URL = 'https://kaarigarai.onrender.com';
-      const response = await fetch(`${BASE_URL}/api/generate`, {
+      const base64Image = await fileToBase64(file);
+
+      const prompt = `
+        You are a cultural marketing expert specializing in Indian handicrafts. Generate marketing content that honors the heritage and story behind each craft.
+        
+        Artisan's Name: ${formData.artisanName || 'Unknown Artisan'}
+        Craft Name: ${formData.craftName || 'Unknown Craft'}
+        Region of India: ${formData.region || 'Unknown Region'}
+        Artisan's Description: "${formData.description || 'No description provided.'}"
+
+        Analyze the attached image and generate the following content. Return the result strictly in valid JSON format with the following keys:
+        {
+          "heritageStory": "A 150-word emotional and authentic heritage story about the craft and origin.",
+          "productListing": {
+            "title": "SEO optimized title",
+            "description": "Around 200 word detailed description of the product",
+            "tags": ["tag1", "tag2", "tag3", "tag4", "tag5", "tag6", "tag7", "tag8", "tag9", "tag10"]
+          },
+          "instagramCaptions": [
+            "Caption 1 (under 150 characters with hashtags)",
+            "Caption 2 (under 150 characters with hashtags)",
+            "Caption 3 (under 150 characters with hashtags)"
+          ],
+          "pricing": {
+            "low": "Suggested low price in INR",
+            "mid": "Suggested mid price in INR",
+            "high": "Suggested high price in INR",
+            "justification": "Brief justification for the price ranges"
+          }
+        }
+        Do not include any markdown formatting like \`\`\`json in the response, just the raw JSON object.
+      `;
+
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${GEMINI_KEY}`;
+
+      const response = await fetch(apiUrl, {
         method: 'POST',
-        body: submitData
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{
+            parts: [
+              { text: prompt },
+              { inline_data: { mime_type: file.type, data: base64Image } }
+            ]
+          }]
+        })
       });
-      
-      if (!response.ok) throw new Error('API Error');
-      
-      const data = await response.json();
-      setGeneratedData(data);
-      
+
+      if (!response.ok) {
+        const errBody = await response.text();
+        console.error('Gemini API Error:', errBody);
+        throw new Error('Gemini API returned an error.');
+      }
+
+      const result = await response.json();
+      const outputText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+
+      if (!outputText) throw new Error('No text in Gemini response.');
+
+      // Clean and parse JSON
+      const cleanedText = outputText.replace(/```json/g, '').replace(/```/g, '').trim();
+      const jsonResult = JSON.parse(cleanedText);
+      setGeneratedData(jsonResult);
+
       // Scroll to results smoothly
       setTimeout(() => {
         window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
       }, 100);
-      
+
     } catch (err) {
-      console.error(err);
-      alert('Failed to process image. Make sure the backend server is running.');
+      console.error('Generation error:', err);
+      alert('Failed to generate content. Check the console for details. Falling back to demo mode.');
+      // Fallback to demo data
+      setFormData(DEMO_DATA.form);
+      setPreview(DEMO_DATA.previewUrl);
+      setGeneratedData(DEMO_DATA.results);
+      setIsDemoMode(true);
     } finally {
       setIsGenerating(false);
     }
