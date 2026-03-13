@@ -348,6 +348,36 @@ export default function ArtisanContentGenerator() {
         </button>
       </div>
 
+      {/* Pain Points Section */}
+      <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-md border border-cream-dark/50">
+        <p className="text-center text-sm font-semibold text-terracotta uppercase tracking-widest mb-1">The Problem</p>
+        <h3 className="text-2xl sm:text-3xl font-serif font-bold text-center text-deepBrown mb-8">
+          7 million artisans in India, less than <span className="text-terracotta">3% sell online</span>
+        </h3>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+          <div className="flex flex-col items-center text-center p-5 rounded-xl bg-cream border border-cream-dark/40">
+            <span className="text-3xl mb-3">📱</span>
+            <h4 className="font-bold text-deepBrown text-sm mb-1">No Digital Skills</h4>
+            <p className="text-xs text-deepBrown-light leading-relaxed">SEO, cataloging & digital marketing take years to learn.</p>
+          </div>
+          <div className="flex flex-col items-center text-center p-5 rounded-xl bg-cream border border-cream-dark/40">
+            <span className="text-3xl mb-3">🗣️</span>
+            <h4 className="font-bold text-deepBrown text-sm mb-1">Language Barrier</h4>
+            <p className="text-xs text-deepBrown-light leading-relaxed">Global marketplaces demand English product descriptions.</p>
+          </div>
+          <div className="flex flex-col items-center text-center p-5 rounded-xl bg-cream border border-cream-dark/40">
+            <span className="text-3xl mb-3">💰</span>
+            <h4 className="font-bold text-deepBrown text-sm mb-1">Pricing Confusion</h4>
+            <p className="text-xs text-deepBrown-light leading-relaxed">Artisans underprice crafts without global market knowledge.</p>
+          </div>
+        </div>
+
+        <p className="text-center text-base font-semibold text-saffron-dark">
+          ✨ KaarigarAI solves all 3 — in under <span className="text-terracotta font-bold">10 seconds</span>.
+        </p>
+      </div>
+
       {/* Main Form */}
       <form onSubmit={handleSubmit} className="card p-6 sm:p-10 shadow-xl border-t-4 border-t-saffron">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
